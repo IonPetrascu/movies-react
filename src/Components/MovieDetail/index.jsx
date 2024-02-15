@@ -4,6 +4,8 @@ import axios from 'axios';
 import VideosSlider from '../videosSlider';
 import SimilarMoviesSlider from '../similarMoviesSlider';
 import TopCast from '../topCast';
+import ContentLoader from 'react-content-loader';
+
 function MovieDetail() {
   const [movie, setMovie] = useState();
   const [videoId, setVideoId] = useState([]);
@@ -66,7 +68,6 @@ function MovieDetail() {
 
     setReviews(data.results);
   };
-
   const handleComment = (id) => {
     activeComment !== id ? setActiveComment(id) : setActiveComment(null);
   };
@@ -87,23 +88,16 @@ function MovieDetail() {
           movie && movie.backdrop_path && '-mt-[300px]'
         } max-w-[1300px] items-center md:items-start mx-auto flex-col md:flex-row flex gap-14 px-5 pb-[100px]`}
       >
-        <div className="max-w-[400px] min-w-[250px] rounded-md overflow-hidden opacity-90  p-3">
-          {movie && movie.poster_path ? (
+        {movie && movie.poster_path && (
+          <div className="max-w-[400px] min-w-[250px] rounded-md overflow-hidden opacity-90  p-3">
             <img
               className="rounded-xl block shadow-lg shadow-white"
               src={`https://image.tmdb.org/t/p/original/${movie && movie.poster_path}`}
               alt=""
             />
-          ) : (
-            <img
-              className="rounded-xl block shadow-lg shadow-white"
-              src={
-                'https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg'
-              }
-              alt={''}
-            />
-          )}
-        </div>
+          </div>
+        )}
+
         <div className="z-[1] flex flex-col gap-[50px] text-center md:text-start">
           <div className="">
             <h2 className=" text-3xl font-extrabold md:text-6xl mb-5">
@@ -195,8 +189,9 @@ function MovieDetail() {
         return (
           <div
             key={review.id}
-            className="relative max-w-[1000px] m-auto border-b flex flex-col p-4 gap-5"
+            className="relative max-w-[1300px] m-auto border-b flex flex-col p-4 gap-5"
           >
+            <h2 className="text-4xl text-center md:text-start font-bold md:pl-6 mb-5">Reviews</h2>
             <div className="flex gap-4">
               {review.author_details.avatar_path ? (
                 <img
@@ -237,7 +232,7 @@ function MovieDetail() {
             </div>
             <button
               onClick={() => handleComment(review.id)}
-              className="font-semibold text-3xl absolute top-5 right-5 "
+              className="font-semibold text-3xl absolute top-5 right-5 p-4 bg-slate-500 rounded-full"
             >
               {activeComment === review.id ? (
                 <svg

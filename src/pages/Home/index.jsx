@@ -1,7 +1,10 @@
+
 import Banner from '../../Components/Banner';
 import MovieList from '../../Components/MovieList';
 
+
 function Home() {
+
   return (
     <>
       <Banner />

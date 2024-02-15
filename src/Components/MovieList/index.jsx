@@ -2,17 +2,36 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Card from '../Card';
-import Pagination from '../Pagination';
 import Skeleton from '../Skeleton';
+import { useSelector } from 'react-redux';
+import { useInView } from 'react-intersection-observer';
 
 function MovieList({}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [movieList, setMovieList] = useState([]);
-  const [totalPages, setTotalPages] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [search, setSearch] = useState('');
+
   const { type } = useParams();
   const headerRef = useRef(null);
+
+  const { movies } = useSelector((state) => state.favoritesSlice);
+  const isMounted = useRef(false);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+  });
+  useEffect(() => {
+    if (inView) {
+      getMoreMovies();
+    }
+  }, [inView]);
+
+  useEffect(() => {
+    if (isMounted) {
+      const json = JSON.stringify(movies);
+      localStorage.setItem('favorites', json);
+    }
+    isMounted.current = true;
+  }, [movies]);
 
   useEffect(() => {
     getMovies();
@@ -20,9 +39,7 @@ function MovieList({}) {
 
   useEffect(() => {
     getMovies();
-  }, [type, currentPage]);
-
-  ('https://api.themoviedb.org/3/search/movie?api_key=4e44d9029b1270a757cddc766a1bcb63&l&query=potter');
+  }, [type]);
 
   const getMovies = async () => {
     setIsLoaded(false);
@@ -35,23 +52,22 @@ function MovieList({}) {
     );
 
     setMovieList(data.results);
-
-    setTotalPages(data.total_pages);
     setIsLoaded(true);
   };
 
-  const searchMovies = async () => {
-    setIsLoaded(false);
+  const getMoreMovies = async () => {
+   
     const { data } = await axios.get(
-      ` https://api.themoviedb.org/3/search/movie?api_key=4e44d9029b1270a757cddc766a1bcb63&l${
-        search !== '' ? `&query=${search}` : ''
+      `https://api.themoviedb.org/3/movie/${
+        type ? type : 'popular'
+      }?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US&page=${
+        currentPage === 1 ? currentPage + 1 : currentPage
       }`,
     );
 
-    setMovieList(data.results);
-
-    setTotalPages(data.total_pages);
-    setIsLoaded(true);
+    setMovieList((prev) => [...prev, ...data.results]);
+    setCurrentPage(currentPage + 1);
+  
   };
 
   return (
@@ -66,8 +82,7 @@ function MovieList({}) {
             : [...Array(10)].map((_, id) => <Skeleton key={id} />)}
         </div>
       </div>
-
-      <Pagination setCurrentPage={setCurrentPage} totalPages={totalPages} headerRef={headerRef} />
+      <div ref={ref} className="flex justify-center py-10"></div>
     </>
   );
 }

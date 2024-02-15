@@ -34,6 +34,14 @@ function Nav({ display, handleClickMenu }) {
             Upcoming
           </Link>
         </li>
+        <li onClick={handleClickMenu}>
+          <Link
+            to="/favorites"
+            className="hover:underline underline-offset-8 text-3xl md:text-xl flex"
+          >
+            Favorites
+          </Link>
+        </li>
       </ul>
     </nav>
   );
