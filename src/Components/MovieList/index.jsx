@@ -16,6 +16,7 @@ function MovieList({}) {
 
   const { movies } = useSelector((state) => state.favoritesSlice);
   const isMounted = useRef(false);
+
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
@@ -35,10 +36,6 @@ function MovieList({}) {
 
   useEffect(() => {
     getMovies();
-  }, []);
-
-  useEffect(() => {
-    getMovies();
   }, [type]);
 
   const getMovies = async () => {
@@ -47,7 +44,7 @@ function MovieList({}) {
       `https://api.themoviedb.org/3/movie/${
         type ? type : 'popular'
       }?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US&page=${
-        currentPage ? currentPage : '1'
+        currentPage ? currentPage : 1
       }`,
     );
 
@@ -56,7 +53,6 @@ function MovieList({}) {
   };
 
   const getMoreMovies = async () => {
-   
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/movie/${
         type ? type : 'popular'
@@ -64,10 +60,8 @@ function MovieList({}) {
         currentPage === 1 ? currentPage + 1 : currentPage
       }`,
     );
-
     setMovieList((prev) => [...prev, ...data.results]);
-    setCurrentPage(currentPage + 1);
-  
+    setCurrentPage((prev) => prev + 1);
   };
 
   return (

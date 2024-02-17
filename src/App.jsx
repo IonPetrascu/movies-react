@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import MovieDetail from './Components/MovieDetail';
 import MovieList from './Components/MovieList';
 import ActorPage from './pages/ActorPage';
-import FavoritesMoviePage from './pages/FavoritesMoviePage';
+import FavoritesPage from './pages/FavoritesPage';
 function App() {
   return (
     <>
@@ -14,7 +14,7 @@ function App() {
         <Route path="movie/:id" element={<MovieDetail />} />
         <Route path="movies/:type" element={<MovieList />} />
         <Route path="person/:id" element={<ActorPage />} />
-        <Route path="/favorites" element={<FavoritesMoviePage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/*" element={<h1>Error page</h1>} />
       </Routes>
     </>

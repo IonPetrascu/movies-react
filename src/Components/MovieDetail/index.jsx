@@ -4,9 +4,10 @@ import axios from 'axios';
 import VideosSlider from '../videosSlider';
 import SimilarMoviesSlider from '../similarMoviesSlider';
 import TopCast from '../topCast';
-import ContentLoader from 'react-content-loader';
+
 
 function MovieDetail() {
+
   const [movie, setMovie] = useState();
   const [videoId, setVideoId] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
@@ -15,6 +16,9 @@ function MovieDetail() {
   const [topCast, setTopCast] = useState([]);
   const [activeComment, setActiveComment] = useState(0);
   const { id } = useParams();
+
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,6 +75,10 @@ function MovieDetail() {
   const handleComment = (id) => {
     activeComment !== id ? setActiveComment(id) : setActiveComment(null);
   };
+
+ 
+
+
   return (
     <div>
       {movie && movie.backdrop_path && (
@@ -95,6 +103,7 @@ function MovieDetail() {
               src={`https://image.tmdb.org/t/p/original/${movie && movie.poster_path}`}
               alt=""
             />
+           
           </div>
         )}
 
